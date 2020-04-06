@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4" lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <title th:text="${'用户列表 - ' + site_name}"></title>
+    <link rel="stylesheet" type="text/css" href="/webjars/bootstrap/3.3.7/css/bootstrap.min.css"/>
+</head>
+<body>
+<div th:replace="fragments/header :: header"></div>
+<div class="container">
+    <form>
+        <label>通过车牌查找记录：<input type="text" name="carID"></label>
+        <button type="submit">查找</button>
+    </form>
+    <table class="table table-striped table-bordered">
+        <tr>
+            <td>序号</td>
+<!--            <td>id</td>-->
+            <td>车牌</td>
+            <td>入库/出库</td>
+            <td>时间</td>
+            <td>停车中</td>
+        </tr>
+        <!--/*@thymesVar id="record" type="me.kanmodel.gra.pms.entity.ParkRecord"*/-->
+        <th:block th:each="record, iter:${recordList}">
+            <tr>
+                <td th:text="${iter.index + 1}"></td>
+<!--                <td th:text="${record.id}"></td>-->
+                <td th:text="${record.carID}"></td>
+                <td>
+                    <th:block th:if="${record.enter}">入</th:block>
+                    <th:block th:unless="${record.enter}">出</th:block>
+                </td>
+                <td th:text="${record.getParkTimeFormat()}"></td>
+                <td>
+                    <th:block th:if="${record.exist}">是</th:block>
+                    <th:block th:unless="${record.exist}">否</th:block>
+                </td>
+        </th:block>
+    </table>
+    <p th:text="${res}"></p>
+    <div align="center">
+        <p style="color: black;margin-top: 20px;">当前页码：<span th:text="${pageNo + '/' + pageCount}"></span>
+            <span th:if="${pageNo} > 1"><a
+                    th:href="'/park/list?no=' + ${pageNo - 1} + '&carID=' + ${carID}">上一页</a></span>
+            <span th:if="${pageNo} < ${pageCount}"><a th:href="'/park/list?no=' + ${pageNo + 1} + '&carID=' + ${carID}">下一页</a></span>
+        </p>
+    </div>
+</div>
+<div th:replace="fragments/footer :: footer"></div>
+</body>
+</html>
