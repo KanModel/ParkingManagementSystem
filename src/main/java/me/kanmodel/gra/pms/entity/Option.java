@@ -1,7 +1,6 @@
 package me.kanmodel.gra.pms.entity;
 
 import lombok.Data;
-
 import javax.persistence.*;
 
 /**

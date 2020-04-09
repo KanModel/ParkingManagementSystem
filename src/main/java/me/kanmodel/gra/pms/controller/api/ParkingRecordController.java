@@ -8,6 +8,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -24,12 +27,13 @@ public class ParkingRecordController {
 
     @PostMapping("/enter")
     @ApiOperation("入库")
-    private ResponseEntity<Map<String, String>> enter(@RequestParam(required = false) String carID){
+    private ResponseEntity<Map<String, String>> enter(@RequestParam(required = false) String carID) throws UnsupportedEncodingException {
         Map<String, String> result = new HashMap<>();
         if (carID == null) {
             result.put("status", "missing parameters");
             return new ResponseEntity<>(result, HttpStatus.BAD_REQUEST);
         }
+        carID = URLDecoder.decode(carID, "UTF-8");
         //判断是否已在库中
         if(recordRepository.findByCarIDAndExistAndEnter(carID, true, true).isPresent()){
             result.put("status", "exist");
@@ -43,12 +47,13 @@ public class ParkingRecordController {
 
     @PostMapping("/exit")
     @ApiOperation("出库")
-    private ResponseEntity<Map<String, String>> exit(@RequestParam(required = false) String carID){
+    private ResponseEntity<Map<String, String>> exit(@RequestParam(required = false) String carID) throws UnsupportedEncodingException {
         Map<String, String> result = new HashMap<>();
         if (carID == null) {
             result.put("status", "missing parameters");
             return new ResponseEntity<>(result, HttpStatus.BAD_REQUEST);
         }
+        carID = URLDecoder.decode(carID, "UTF-8");
         //判断是否在库中
         if(!recordRepository.findByCarIDAndExistAndEnter(carID, true, true).isPresent()){
             result.put("status", "not exist");
