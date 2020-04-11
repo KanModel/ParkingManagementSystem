@@ -13,6 +13,7 @@
         <label>通过车牌查找记录：<input type="text" name="carID"></label>
         <button type="submit">查找</button>
     </form>
+    <span th:text="${'已使用车位: ' + parkCount}"></span>
     <table class="table table-striped table-bordered">
         <tr>
             <td>序号</td>

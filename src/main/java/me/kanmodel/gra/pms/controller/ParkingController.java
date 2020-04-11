@@ -2,6 +2,7 @@ package me.kanmodel.gra.pms.controller;
 
 import me.kanmodel.gra.pms.dao.RecordRepository;
 import me.kanmodel.gra.pms.entity.ParkRecord;
+import me.kanmodel.gra.pms.entity.ParkScatter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -12,6 +13,10 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Controller
 @RequestMapping("/park")
@@ -38,7 +43,35 @@ public class ParkingController {
         model.addAttribute("res", res);
         model.addAttribute("pageNo", pageNo);
         model.addAttribute("pageCount", page.getTotalPages());
+        model.addAttribute("parkCount", recordRepository.countByExistAndIsDelete(true, false));
         if (carID != null) model.addAttribute("carID", carID);
         return "/park/record_list";
+    }
+
+    @RequestMapping("/chart")
+    public String echarts(Model model) {
+//        model.addAttribute("data", "");
+        return "park/echart";
+    }
+
+    @RequestMapping("/scatter")
+    @ResponseBody
+    public List<ParkScatter> ParkScatter() {
+        ArrayList<ParkScatter> list = new ArrayList<>();
+
+        list.add(new ParkScatter(2.0, 2.0, true));
+        list.add(new ParkScatter(2.0, 4.0, false));
+        list.add(new ParkScatter(2.0, 6.0, false));
+        list.add(new ParkScatter(2.0, 8.0, false));
+        list.add(new ParkScatter(2.0, 10.0, false));
+        list.add(new ParkScatter(2.0, 12.0, false));
+        list.add(new ParkScatter(6.0, 2.0, true));
+        list.add(new ParkScatter(6.0, 4.0, false));
+        list.add(new ParkScatter(6.0, 6.0, false));
+        list.add(new ParkScatter(6.0, 8.0, false));
+        list.add(new ParkScatter(6.0, 10.0, false));
+        list.add(new ParkScatter(6.0, 12.0, false));
+
+        return list;
     }
 }

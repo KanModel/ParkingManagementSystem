@@ -27,7 +27,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private static final String[] AUTH_WHITELIST = {
             "/", "/index", "/webjars/**", "/post/p**", "/post/list", "/lib/**",
-            "/css/**", "/js/**", "/fonts/**", "/images/**", "/reg", "/error", "/chart", "/scatter",
+            "/css/**", "/js/**", "/fonts/**", "/images/**", "/reg", "/error", "/park/chart", "/park/scatter",
             //REST
             "/api/**"
     };

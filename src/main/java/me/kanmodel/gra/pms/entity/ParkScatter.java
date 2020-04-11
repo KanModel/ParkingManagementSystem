@@ -2,6 +2,7 @@ package me.kanmodel.gra.pms.entity;
 
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+
 import javax.persistence.*;
 
 @Entity
@@ -21,10 +22,16 @@ public class ParkScatter {
     @Column(name = "y", columnDefinition = "double")
     private double y;
 
-    ParkScatter() {}
+    @ApiModelProperty("使用中")
+    @Column(name = "is_use", columnDefinition = "bit(1) default 0")
+    private Boolean use;
 
-    public ParkScatter(double x, double y) {
+    public ParkScatter() {
+    }
+
+    public ParkScatter(double x, double y, Boolean use) {
         this.x = x;
         this.y = y;
+        this.use = use;
     }
 }

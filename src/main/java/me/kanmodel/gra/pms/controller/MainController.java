@@ -11,13 +11,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * 接收访问管理页面时登录登出的请求
@@ -29,25 +25,6 @@ public class MainController {
     @RequestMapping(value = {"/index", "/"})
     public String index(Model model) {
         return "index";
-    }
-
-    @RequestMapping("/chart")
-    public String echarts(Model model) {
-
-//        model.addAttribute("data", "");
-        return "echart_test";
-    }
-
-    @RequestMapping("/scatter")
-    @ResponseBody
-    public List<ParkScatter> ParkScatter() {
-        ArrayList<ParkScatter> list = new ArrayList<>();
-
-        list.add(new ParkScatter(10.0, 8.04));
-        list.add(new ParkScatter(6.0, 7.24));
-        list.add(new ParkScatter(4.0, 4.26));
-
-        return list;
     }
 
     @ModelAttribute

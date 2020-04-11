@@ -19,14 +19,14 @@
             <td>修改</td>
         </tr>
         <th:block th:each="option, iter:${optionList}">
-            <tr>
+            <tr style="font-size: 18px">
                 <td th:text="${iter.index + 1}"></td>
                 <td th:text="${option.id}"></td>
                 <td th:text="${option.description}"></td>
                 <td th:text="${option.key}"></td>
                 <td th:text="${option.value}"></td>
                 <td>
-                    <form th:action="@{/manage/option/edit}" method="post" style="margin-top: 16px">
+                    <form th:action="@{/manage/option/edit}" method="post">
                         <label>
                             <input type="text" th:name="value" class="form-control">
                         </label>

@@ -17,6 +17,7 @@
             <div>
                 <form th:action="@{/post/list}">
                     <ul class="nav navbar-nav">
+                        <li class="active"><a th:href="@{/park/chart}">车位分布</a></li>
                         <li sec:authorize="isAuthenticated()" class="active"><a th:href="@{/space}">个人空间</a></li>
                         <li sec:authorize="isAuthenticated()" class="active"><a th:href="@{/park/list}">停车记录</a></li>
                         <li sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_SUPER')" class="active"><a

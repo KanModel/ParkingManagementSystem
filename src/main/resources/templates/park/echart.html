@@ -1,0 +1,98 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title th:text="${'首页 - ' + site_name}"></title>
+    <link rel="stylesheet" type="text/css" href="/webjars/bootstrap/3.3.7/css/bootstrap.min.css"/>
+    <script src="https://cdn.jsdelivr.net/npm/echarts@4.7.0/dist/echarts.min.js"></script>
+    <script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
+</head>
+<body>
+<div th:replace="fragments/header :: header"></div>
+<div class="container">
+    <div id="main" style="width: 1024px;height:768px;"></div>
+    <script type="text/javascript">
+        // 基于准备好的dom，初始化echarts实例
+        var myChart = echarts.init(document.getElementById('main'));
+
+        var empty = [], use = [];
+
+        $.ajax({
+            type: "GET",
+            url: "/park/scatter",
+            dataType: "json",
+            async: false,
+            success: function (result) {
+                console.log(result);
+                for (var i = 0; i < result.length; i++) {
+                    if (result[i].use) {
+                        use.push([result[i].x, result[i].y, i]);
+                    } else {
+                        empty.push([result[i].x, result[i].y, i]);
+                    }
+                }
+                console.log(use, empty, result);
+            },
+            error: function (errorMsg) {
+                alert("获取后台数据失败！");
+            }
+        });
+
+        // 指定图表的配置项和数据
+        var option = {
+            xAxis: {show: false},
+            yAxis: {show: false},
+            title: {
+                text: '车位使用状况分布图'
+            },
+            legend: {
+                right: 10,
+                data: ['使用中', '未使用']
+            },
+            series: [
+                {
+                    name: '使用中',
+                    symbolSize: 20,
+                    data: use,
+                    type: 'scatter',
+                    showAllSymbol: true,
+                    symbol: 'path://path://M52.536 542.42833336l77.777 184.496h699.928l143.271-184.496h-920.977zM813.884 664.03533336c-15.822 0-28.64-13.153-28.64-29.375 0-16.19 12.818-29.342 28.64-29.342 15.823 0 28.641 13.153 28.641 29.342 0 16.223-12.818 29.375-28.641 29.375zM785.243 160.88633336h-79.045v243.18h79.045v-243.18zM650.151 160.88633336h-79.013v243.18h79.013v-243.18zM842.525 425.02833336h-329.503v-50.305h-362.247v136.895h691.751v-86.59zM226.315 471.16133336c-15.822 0-28.64-13.153-28.64-29.375 0-16.19 12.818-29.342 28.64-29.342 15.822 0 28.641 13.153 28.641 29.342 0 16.222-12.818 29.375-28.641 29.375zM332.733 472.52933336c-15.822 0-28.64-13.153-28.64-29.341 0-16.223 12.818-29.375 28.64-29.375 15.822 0 28.641 13.153 28.641 29.375 0 16.189-12.818 29.341-28.641 29.341zM433.477 472.96333336c-15.822 0-28.64-13.119-28.64-29.342s12.818-29.342 28.64-29.342c15.822 0 28.674 13.119 28.674 29.342s-12.852 29.342-28.674 29.342z',
+                    emphasis: {
+                        label: {
+                            show: true,
+                            formatter: function (param) {
+                                return param.data[2];
+                            },
+                            position: 'top'
+                        }
+                    }
+                },
+                {
+                    name: '未使用',
+                    symbolSize: 20,
+                    data: empty,
+                    type: 'scatter',
+                    symbol: 'rect',
+                    emphasis: {
+                        label: {
+                            show: true,
+                            formatter: function (param) {
+                                return param.data[2];
+                            },
+                            position: 'top'
+                        }
+                    }
+                }]
+        };
+
+        // 使用刚指定的配置项和数据显示图表。
+        myChart.setOption(option);
+    </script>
+</div>
+</body>
+<div th:replace="fragments/footer :: footer"></div>
+</html>
