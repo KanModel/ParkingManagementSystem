@@ -3,12 +3,11 @@ package me.kanmodel.gra.pms;
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -16,18 +15,37 @@ import java.util.Base64;
 
 import static org.apache.http.protocol.HTTP.USER_AGENT;
 
-public class PicSender {
+public class ParkEmulator {
+    private static boolean use = true;
+
     public static void main(String[] args) {
         JFrame window = new JFrame("图片发送");
-        JButton button1 = new JButton("入库");
-        JButton button2 = new JButton("出库");
-        window.add(button1);
-        window.add(button2);
-        window.setSize(new Dimension(300, 100));
-        window.setLayout(new FlowLayout());
+        JPanel panel1 = new JPanel();
+        JPanel panel2 = new JPanel();
+        JButton enterBtn = new JButton("入库");
+        JButton exitBtn = new JButton("出库");
+        panel1.add(enterBtn);
+        panel1.add(exitBtn);
+        JButton parkBtn = new JButton("停车");
+        JLabel label = new JLabel("使用:");
+        JCheckBox checkBox = new JCheckBox();
+        JTextField textField = new JTextField(5);
+        textField.setText("1");
+        textField.setHorizontalAlignment(JTextField.RIGHT);
+        checkBox.setSelected(use);
+        panel2.add(textField);
+        panel2.add(label);
+        panel2.add(checkBox);
+        panel2.add(parkBtn);
+
+        window.setSize(new Dimension(250, 100));
+        window.setResizable(false);
+        window.setLayout(new BorderLayout());
+        window.add(panel1, BorderLayout.NORTH);
+        window.add(panel2, BorderLayout.SOUTH);
 
         //入库
-        button1.addActionListener(e -> {
+        enterBtn.addActionListener(e -> {
             JFileChooser fileChooser = new JFileChooser();
             FileNameExtensionFilter filter = new FileNameExtensionFilter("图片文件", "jpg", "png");
             fileChooser.setFileFilter(filter);
@@ -37,7 +55,7 @@ public class PicSender {
                 try {
                     String base64Str = pic2Base64(pic);
                     String res = sendPost("http://127.0.0.1:8086/reg", "data=" + base64Str);
-                    System.out.println(sendPost("http://127.0.0.1:8088/api/park/enter?carID=" + URLEncoder.encode(res, "UTF-8"), ""));;
+                    System.out.println(sendPost("http://127.0.0.1:8088/api/park/enter?carID=" + URLEncoder.encode(res, "UTF-8"), ""));
                 } catch (Exception ex) {
                     ex.printStackTrace();
                 }
@@ -45,7 +63,7 @@ public class PicSender {
         });
 
         //出库
-        button2.addActionListener(e -> {
+        exitBtn.addActionListener(e -> {
             JFileChooser fileChooser = new JFileChooser();
             FileNameExtensionFilter filter = new FileNameExtensionFilter("图片文件", "jpg", "png");
             fileChooser.setFileFilter(filter);
@@ -55,9 +73,28 @@ public class PicSender {
                 try {
                     String base64Str = pic2Base64(pic);
                     String res = sendPost("http://127.0.0.1:8086/reg", "data=" + base64Str);
-                    System.out.println(sendPost("http://127.0.0.1:8088/api/park/exit?carID=" + URLEncoder.encode(res, "UTF-8"), ""));;
+                    System.out.println(sendPost("http://127.0.0.1:8088/api/park/exit?carID=" + URLEncoder.encode(res, "UTF-8"), ""));
                 } catch (Exception ex) {
                     ex.printStackTrace();
+                }
+            }
+        });
+
+        parkBtn.addActionListener(e -> {
+            try {
+                System.out.println(sendPost("http://127.0.0.1:8088/api/scatter/use?parkID=" + textField.getText() + "&use=" + use, ""));
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        });
+
+        checkBox.addActionListener(e -> use = checkBox.isSelected());
+
+        textField.addKeyListener(new KeyAdapter(){
+            public void keyTyped(KeyEvent e) {
+                int keyChar = e.getKeyChar();
+                if(!(keyChar >= KeyEvent.VK_0 && keyChar <= KeyEvent.VK_9)){
+                    e.consume(); //关键，屏蔽掉非法输入
                 }
             }
         });
@@ -99,7 +136,6 @@ public class PicSender {
         }
         in.close();
 
-//        System.out.println(response.toString());
         return response.toString();
     }
 
