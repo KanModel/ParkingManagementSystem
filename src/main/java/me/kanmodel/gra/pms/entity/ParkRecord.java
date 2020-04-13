@@ -2,6 +2,7 @@ package me.kanmodel.gra.pms.entity;
 
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+import springfox.documentation.annotations.ApiIgnore;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
@@ -14,6 +15,7 @@ public class ParkRecord {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "park_record_id")
+    @ApiModelProperty("ID")
     private Long id;
 
     @ApiModelProperty("车牌")
@@ -50,6 +52,7 @@ public class ParkRecord {
         this.recordTime = new Timestamp(System.currentTimeMillis());
     }
 
+    @ApiIgnore
     public String getParkTimeFormat() {
         SimpleDateFormat time = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         return time.format(this.recordTime.getTime());

@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.ResponseStatus;
+import springfox.documentation.annotations.ApiIgnore;
 
 /**
  * @description: 像前台提供出错的处理
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
  * @create: 2019-04-13 21:15
  */
 @ControllerAdvice
+@ApiIgnore
 public class ErrorController {
     private static Logger logger = LoggerFactory.getLogger(ErrorController.class);
 

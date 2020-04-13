@@ -1,6 +1,7 @@
 package me.kanmodel.gra.pms.controller;
 
 import me.kanmodel.gra.pms.dao.RecordRepository;
+import me.kanmodel.gra.pms.dao.ScatterRepository;
 import me.kanmodel.gra.pms.entity.ParkRecord;
 import me.kanmodel.gra.pms.entity.ParkScatter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,12 +15,14 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import springfox.documentation.annotations.ApiIgnore;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Controller
 @RequestMapping("/park")
+@ApiIgnore
 public class ParkingController {
 
     @Autowired
@@ -50,28 +53,6 @@ public class ParkingController {
 
     @RequestMapping("/chart")
     public String echarts(Model model) {
-//        model.addAttribute("data", "");
         return "park/echart";
-    }
-
-    @RequestMapping("/scatter")
-    @ResponseBody
-    public List<ParkScatter> ParkScatter() {
-        ArrayList<ParkScatter> list = new ArrayList<>();
-
-        list.add(new ParkScatter(2.0, 2.0, true));
-        list.add(new ParkScatter(2.0, 4.0, false));
-        list.add(new ParkScatter(2.0, 6.0, false));
-        list.add(new ParkScatter(2.0, 8.0, false));
-        list.add(new ParkScatter(2.0, 10.0, false));
-        list.add(new ParkScatter(2.0, 12.0, false));
-        list.add(new ParkScatter(6.0, 2.0, true));
-        list.add(new ParkScatter(6.0, 4.0, false));
-        list.add(new ParkScatter(6.0, 6.0, false));
-        list.add(new ParkScatter(6.0, 8.0, false));
-        list.add(new ParkScatter(6.0, 10.0, false));
-        list.add(new ParkScatter(6.0, 12.0, false));
-
-        return list;
     }
 }
