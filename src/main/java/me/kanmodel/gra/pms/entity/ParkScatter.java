@@ -11,7 +11,7 @@ import javax.persistence.*;
 public class ParkScatter {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "park_record_id")
+    @Column(name = "park_scatter_id")
     private Long id;
 
     @ApiModelProperty("X坐标")

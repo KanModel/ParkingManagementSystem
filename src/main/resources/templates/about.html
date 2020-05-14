@@ -6,19 +6,15 @@
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title th:text="${'首页 - ' + site_name}"></title>
-<!--    <link rel="stylesheet" type="text/css" href="/webjars/bootstrap/3.3.7/css/bootstrap.min.css"/>-->
+    <title th:text="${'关于 - ' + site_name}"></title>
+    <link rel="stylesheet" type="text/css" href="/webjars/bootstrap/3.3.7/css/bootstrap.min.css"/>
 </head>
 <body>
 <div th:replace="fragments/header :: header"></div>
 <div class="container">
     <div class="jumbotron row">
-        <h1>智能停车场管理系统</h1>
+        <h1>关于智能停车场管理系统</h1>
         <p>欢迎来到智能停车场管理系统</p>
-        <p><a class="btn btn-primary btn-lg" th:href="@{/about}" role="button">了解更多 &raquo;</a></p>
-    </div>
-    <div class="row">
-        <img src="/image/res001.jpg" class="img-rounded img-responsive center-block">
     </div>
 </div>
 <hr>

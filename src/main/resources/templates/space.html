@@ -9,47 +9,33 @@
 <body>
 <div th:replace="fragments/header :: header"></div>
 <div class="container">
-    <h1>登陆成功</h1>
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            <h3 class="panel-title">用户信息</h3>
+        </div>
+        <table class="table">
+            <tr><td>用户名</td><td><span sec:authentication="name"></td></tr>
+            <tr><td>ID</td><td><span sec:authentication="principal.id"></td></tr>
+            <tr><td>昵称</td><td><span sec:authentication="principal.display"></td></tr>
+            <tr><td>注册时间</td><td><span sec:authentication="principal.registered"></td></tr>
+        </table>
+        <div class="panel-body">
+            <a class="btn btn-primary" th:href="@{/user/edit}">信息修改</a>
 
-    <h3>登录用户：<span sec:authentication="name"></span></h3>
-
-    <p>ID      ：<span sec:authentication="principal.id"></span></p>
-    <p>昵称 ：<span sec:authentication="principal.display"></span></p>
-    <p>注册时间 ：<span sec:authentication="principal.registered"></span></p>
-
-    <div sec:authorize="hasAnyRole('ROLE_ADMIN')">
-        管理员您好
-        <a th:href="@{/user}">用户管理</a>
+            <div sec:authorize="hasAnyRole('ROLE_ADMIN')">
+                <br>
+                <a class="btn btn-danger" th:href="@{/user}">用户管理</a>
+            </div>
+            <div sec:authorize="hasAnyRole('ROLE_SUPER')">
+                <br>
+                <a class="btn btn-danger" th:href="@{/swagger-ui.html}">接口查看</a>
+            </div>
+            <div sec:authorize="isAnonymous()">
+                <p>未有用户登录</p>
+            </div>
+            <p th:text="${res}"></p>
+        </div>
     </div>
-    <div sec:authorize="hasAnyRole('ROLE_SUPER')">
-        超级管理员您好
-        <a th:href="@{/swagger-ui.html}">SWAGGER</a>
-    </div>
-
-    <div sec:authorize="isAuthenticated()">
-        <p class="bg-info">已认证</p>
-    </div>
-    <div sec:authorize="isAnonymous()">
-        <p>未有用户登录</p>
-    </div>
-    <form th:action="@{/user/edit/display}" method="post">
-        <label>修改昵称：
-            <input class="form-control" type="text" th:name="display">
-        </label>
-        <button type="submit" class=" btn btn-default">修改</button>
-    </form>
-    <br>
-    <form th:action="@{/user/edit/mpass}" method="post">
-        <label>原密码：
-            <input class="form-control" type="password" th:name="old_pass">
-        </label>
-        <label>新密码：
-            <input class="form-control" type="password" th:name="new_pass">
-        </label>
-        <button type="submit" class=" btn btn-default">修改</button>
-    </form>
-    <br>
-    <p th:text="${res}"></p>
 </div>
 <div th:replace="fragments/footer :: footer"></div>
 </body>

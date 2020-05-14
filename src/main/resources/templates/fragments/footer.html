@@ -2,13 +2,19 @@
 	  xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4" lang="en">
 <body>
-<div th:fragment="footer">
-    <div class="container">
+<footer th:fragment="footer" class="navbar-fixed-bottom container-fluid foot-wrap">
+    <style>
+        .foot-wrap{
+            background-color: #c1fff8;
+            margin-top:80px;
+        }
+    </style>
+    <div class="container text">
         <footer>
         <!-- this is footer -->
         © 2020 KanModel <a th:href="@{/}">首页</a>
             <span sec:authorize="isAnonymous()">
-                | <a href="/login">登录</a> </a>
+                | <a href="/login">登录</a>
             </span>
             <span sec:authorize="isAuthenticated()">
                 | 已登录: <span sec:authentication="name"></span> |
@@ -17,6 +23,6 @@
             </span>
         </footer>
     </div>
-</div>
+</footer>
 </body>
 </html>

@@ -4,28 +4,55 @@
 <head>
     <title th:text="${'登录 - ' + site_name}"></title>
     <link rel="stylesheet" type="text/css" href="/webjars/bootstrap/3.3.7/css/bootstrap.min.css"/>
+    <style>
+        .mysign{
+            width: 500px;
+        }
+    </style>
 </head>
 <body>
 <div th:replace="fragments/header :: header"></div>
 <div class="container">
     <div class="center-block">
-        <h1>登录</h1>
-        <p th:if="${logout}" class="bg-warning">已注销</p>
-        <p th:if="${passerror}" class="bg-danger">有错误，请重试</p>
-        <p th:if="${add_res}" th:text="${add_res}" class="bg-danger"></p>
         <form th:action="@{/login}" method="post" role="form">
-            <div class="form-group">
-                <label for="username" class="form-inline">用户名:</label>
-                <input type="text" class="form-control form-inline" placeholder="请输入用户名..."
-                       id="username" name="username" autofocus="autofocus"/>
-            </div>
-            <div class="form-group">
-                <label for="password" class="form-inline">密码:</label>
-                <input type="password" class="form-control form-inline" placeholder="请输入密码..."
-                       id="password" name="password"/>
-            </div>
-            <div class="form-group">
-                <button type="submit" class="btn btn-default">登录</button>
+            <div class="mysign jumbotron center-block">
+                <!--            <div class="form-group">-->
+                <!--                <label for="username" class="form-inline">用户名:</label>-->
+                <!--                <input type="text" class="form-control form-inline" placeholder="请输入用户名..."-->
+                <!--                       id="username" name="username" autofocus="autofocus"/>-->
+                <!--            </div>-->
+                <!--            <div class="form-group">-->
+                <!--                <label for="password" class="form-inline">密码:</label>-->
+                <!--                <input type="password" class="form-control form-inline" placeholder="请输入密码..."-->
+                <!--                       id="password" name="password"/>-->
+                <!--            </div>-->
+                <!--            <div class="form-group">-->
+                <!--                <button type="submit" class="btn btn-default">登录</button>-->
+                <!--            </div>-->
+                <h2 class="text-center text-info col-lg-11 ">登录</h2>
+
+                <div class="form-group col-lg-10">
+                    <div class="input-group">
+                        <span class="input-group-addon">用  户</span>
+                        <input type="text" class="form-control form-inline" placeholder="请输入用户名..."
+                               id="username" name="username" autofocus="autofocus"/>
+                    </div>
+                </div>
+                <div class="form-group col-lg-10">
+                    <div class="input-group">
+                        <span class="input-group-addon"><i class="fa fa-lock"></i>密  码</span>
+                        <input type="password" class="form-control form-inline" placeholder="请输入密码..."
+                               id="password" name="password"/>
+                    </div>
+                </div>
+                <div class="form-group col-lg-10">
+                    <button type="submit" class="btn btn-success col-lg-12">登录</button>
+                </div>
+                <div class="col-lg-10">
+                    <p th:if="${logout}" class="text-warning">已注销</p>
+                    <p th:if="${passerror}" class="text-danger">有错误，请重试</p>
+                    <p th:if="${add_res}" th:text="${add_res}" class="text-danger"></p>
+                </div>
             </div>
         </form>
     </div>

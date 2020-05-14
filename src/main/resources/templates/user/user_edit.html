@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4" lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <title th:text="${'个人信息修改 - ' + site_name}"></title>
+    <script type="text/javascript" src="webjars/jquery/1.11.1/jquery.js"></script>
+    <link rel="stylesheet" type="text/css" href="/webjars/bootstrap/3.3.7/css/bootstrap.min.css"/>
+</head>
+<body>
+<div th:replace="fragments/header :: header"></div>
+<div class="container">
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            <h3 class="panel-title">信息修改</h3>
+        </div>
+        <div class="panel-body">
+            <form th:action="@{/user/edit/display}" method="post">
+                <label>修改昵称：
+                    <input class="form-control" type="text" th:name="display">
+                </label>
+                <button type="submit" class=" btn btn-default">修改</button>
+            </form>
+            <br>
+            <form th:action="@{/user/edit/mpass}" method="post">
+                <label>原密码：
+                    <input class="form-control" type="password" th:name="old_pass">
+                </label>
+                <label>新密码：
+                    <input class="form-control" type="password" th:name="new_pass">
+                </label>
+                <button type="submit" class=" btn btn-default">修改</button>
+            </form>
+            <br>
+            <p th:text="${res}"></p>
+        </div>
+    </div>
+</div>
+<div th:replace="fragments/footer :: footer"></div>
+</body>
+</html>

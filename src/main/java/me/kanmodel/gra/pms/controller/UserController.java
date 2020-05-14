@@ -10,8 +10,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -218,6 +216,9 @@ public class UserController {
         }
         return modelAndView;
     }
+
+    @RequestMapping("/user/edit")
+    public String edit(){return "user/user_edit"; }
 
     @RequestMapping(value = "/user/edit/mpass", method = RequestMethod.POST)
     public ModelAndView editUserSelfPass(@RequestParam(value = "old_pass") String oldPass,

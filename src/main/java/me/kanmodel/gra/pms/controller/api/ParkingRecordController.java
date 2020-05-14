@@ -1,11 +1,8 @@
 package me.kanmodel.gra.pms.controller.api;
 
 import io.swagger.annotations.ApiOperation;
-import me.kanmodel.gra.pms.dao.OptionRepository;
 import me.kanmodel.gra.pms.dao.RecordRepository;
-import me.kanmodel.gra.pms.dao.ScatterRepository;
 import me.kanmodel.gra.pms.entity.ParkRecord;
-import me.kanmodel.gra.pms.entity.ParkScatter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,8 +24,6 @@ public class ParkingRecordController {
 
     @Autowired
     private RecordRepository recordRepository;
-    @Autowired
-    private OptionRepository optionRepository;
 
     @PostMapping("/enter")
     @ApiOperation("入库")
@@ -42,7 +37,7 @@ public class ParkingRecordController {
         //判断是否已在库中
         if (recordRepository.findByCarIDAndExistAndEnter(carID, true, true).isPresent()) {
             result.put("status", "exist");
-            return new ResponseEntity<>(result, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(result, HttpStatus.ACCEPTED);
         }
 
         result.put("status", "enter success");
@@ -62,7 +57,7 @@ public class ParkingRecordController {
         //判断是否在库中
         if (!recordRepository.findByCarIDAndExistAndEnter(carID, true, true).isPresent()) {
             result.put("status", "not exist");
-            return new ResponseEntity<>(result, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(result, HttpStatus.ACCEPTED);
         }
         ParkRecord enterRecord = recordRepository.findByCarIDAndExistAndEnter(carID, true, true).get();
         enterRecord.setExist(false);
@@ -71,18 +66,19 @@ public class ParkingRecordController {
         recordRepository.save(exitRecord);
         //获取时间差
         long diff = exitRecord.getRecordTime().getTime() - enterRecord.getRecordTime().getTime();
-        result.put("diff", parseMillisecone(diff));
+        result.put("diff", parseMillisecond(diff));
         result.put("status", "exit success");
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
     @GetMapping("/list")
+    @ApiOperation("获取记录")
     private ResponseEntity<List<ParkRecord>> listAll() {
         List<ParkRecord> list = recordRepository.findAll();
         return new ResponseEntity<>(list, HttpStatus.OK);
     }
 
-    private static String parseMillisecone(long millisecond) {
+    private static String parseMillisecond(long millisecond) {
         String time = null;
         try {
             long yushu_day = millisecond % (1000 * 60 * 60 * 24);

@@ -19,7 +19,7 @@ public class ParkEmulator {
     private static boolean use = true;
 
     public static void main(String[] args) {
-        JFrame window = new JFrame("图片发送");
+        JFrame window = new JFrame("Park Emulator");
         JPanel panel1 = new JPanel();
         JPanel panel2 = new JPanel();
         JButton enterBtn = new JButton("入库");
@@ -57,7 +57,7 @@ public class ParkEmulator {
                     String res = sendPost("http://127.0.0.1:8086/reg", "data=" + base64Str);
                     System.out.println(sendPost("http://127.0.0.1:8088/api/park/enter?carID=" + URLEncoder.encode(res, "UTF-8"), ""));
                 } catch (Exception ex) {
-                    ex.printStackTrace();
+//                    ex.printStackTrace();
                 }
             }
         });
@@ -75,7 +75,7 @@ public class ParkEmulator {
                     String res = sendPost("http://127.0.0.1:8086/reg", "data=" + base64Str);
                     System.out.println(sendPost("http://127.0.0.1:8088/api/park/exit?carID=" + URLEncoder.encode(res, "UTF-8"), ""));
                 } catch (Exception ex) {
-                    ex.printStackTrace();
+//                    ex.printStackTrace();
                 }
             }
         });
@@ -84,7 +84,7 @@ public class ParkEmulator {
             try {
                 System.out.println(sendPost("http://127.0.0.1:8088/api/scatter/use?parkID=" + textField.getText() + "&use=" + use, ""));
             } catch (Exception ex) {
-                ex.printStackTrace();
+//                ex.printStackTrace();
             }
         });
 

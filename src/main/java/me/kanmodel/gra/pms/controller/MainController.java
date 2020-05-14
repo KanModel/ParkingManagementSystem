@@ -25,15 +25,18 @@ import javax.servlet.http.HttpServletResponse;
 @ApiIgnore
 public class MainController {
 
+    @ModelAttribute
+    public void generalModel(Model model) {
+        model.addAttribute("site_name", "PMS");
+    }
+
     @RequestMapping(value = {"/index", "/"})
     public String index(Model model) {
         return "index";
     }
 
-    @ModelAttribute
-    public void generalModel(Model model) {
-        model.addAttribute("site_name", "PMS");
-    }
+    @RequestMapping("/about")
+    public String about() {return "about"; }
 
     @RequestMapping("/login")
     public String login() {

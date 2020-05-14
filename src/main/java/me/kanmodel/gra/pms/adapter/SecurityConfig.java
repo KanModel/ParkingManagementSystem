@@ -12,9 +12,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 /**
- * @description: SpringSecurity配置类
- * @author: KanModel
- * @create: 2019-04-05 21:55
+ * SpringSecurity配置类
  */
 @Configuration
 @EnableWebSecurity
@@ -26,7 +24,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     private static final String[] AUTH_WHITELIST = {
-            "/", "/index", "/webjars/**", "/post/p**", "/post/list", "/lib/**",
+            "/", "/index", "/webjars/**", "/post/p**", "/post/list", "/lib/**","/image/**", "/about",
             "/css/**", "/js/**", "/fonts/**", "/images/**", "/reg", "/error", "/park/chart",
             //REST
             "/api/**"
