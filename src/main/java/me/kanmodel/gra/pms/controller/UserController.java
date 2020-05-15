@@ -17,10 +17,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import springfox.documentation.annotations.ApiIgnore;
 
@@ -63,6 +60,17 @@ public class UserController {
                        @RequestParam(value = "find_res", required = false) String find_res) {
         model.addAttribute("add_res", add_res).addAttribute("find_res", find_res);
         return "user/user";
+    }
+
+    @GetMapping("/user/{id}")
+    @ResponseBody
+    public User getUser(@PathVariable(name = "id") Long id){
+        Optional<User> tmp = userRepository.findById(id);
+        User user = null;
+        if (tmp.isPresent()){
+            user = tmp.get();
+        }
+        return user;
     }
 
     @RequestMapping("/user/list")
@@ -266,7 +274,7 @@ public class UserController {
         }
         ModelAndView modelAndView = new ModelAndView("redirect:/user/list");
         modelAndView.addObject("no", pageNo);
-        modelAndView.addObject("res", "成功为id为" + id + "的用户修改密码");
+        modelAndView.addObject("res", "成功为id为" + id + "的用户修改权限");
         return modelAndView;
     }
 }

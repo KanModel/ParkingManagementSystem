@@ -37,7 +37,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers(AUTH_WHITELIST).permitAll()
                 .antMatchers("/space/**", "/user/edit/display", "/favorite/**", "/favorite",
-                        "/logout", "/user/edit/mpass").authenticated()
+                        "/logout", "/user/edit/mpass", "/user/edit").authenticated()
                 .antMatchers("/manage**", "/swagger-ui.html").hasAnyRole("SUPER")
                 .anyRequest().hasAnyRole("ADMIN", "SUPER")
                 .and()
