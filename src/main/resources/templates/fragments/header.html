@@ -6,7 +6,7 @@
         <link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
         <script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
         <script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
-<!--        <link rel="stylesheet" type="text/css" href="webjars/bootstrap/3.3.7/css/bootstrap.min.css"/>-->
+        <!--        <link rel="stylesheet" type="text/css" href="webjars/bootstrap/3.3.7/css/bootstrap.min.css"/>-->
     </div>
 </head>
 <body>
@@ -29,13 +29,21 @@
                         <li class=""><a th:href="@{/park/chart}">车位分布</a></li>
                         <li sec:authorize="isAuthenticated()" class=""><a th:href="@{/space}">用户空间</a></li>
                         <li sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_SUPER')" class="dropdown">
-                            <a th:href="@{/user}" class="dropdown-toggle" data-toggle="dropdown">用户管理<b class="caret"></b> </a>
+                            <a href="" class="dropdown-toggle" data-toggle="dropdown">
+                                用户管理<b class="caret"></b> </a>
                             <ul class="dropdown-menu">
-                                <li><a href="/user">用户添加</a></li>
-                                <li><a href="/user/list">用户清单</a></li>
+                                <li><a th:href="@{/user}">用户添加</a></li>
+                                <li><a th:href="@{/user/list}">用户清单</a></li>
                             </ul>
                         </li>
-                        <li sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_SUPER')" class=""><a th:href="@{/park/list}">停车记录</a></li>
+                        <li sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_SUPER')" class="dropdown">
+                            <a href="" class="dropdown-toggle" data-toggle="dropdown">
+                                停车记录<b class="caret"></b></a>
+                            <ul class="dropdown-menu">
+                                <li><a th:href="@{/park/iao/record}">出入记录</a></li>
+                                <li><a th:href="@{/park/scatter/record}">车位使用记录</a></li>
+                            </ul>
+                        </li>
                         <li sec:authorize="hasAnyRole('ROLE_SUPER')" class=""><a th:href="@{/manage}">系统设置</a>
                         </li>
                         <li class=""><a th:href="@{/about}">关于</a></li>

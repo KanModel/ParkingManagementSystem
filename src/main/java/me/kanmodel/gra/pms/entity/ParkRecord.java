@@ -52,6 +52,15 @@ public class ParkRecord {
         this.recordTime = new Timestamp(System.currentTimeMillis());
     }
 
+    public ParkRecord(Long id ,String carID, Boolean enter, Boolean exist, Boolean isDelete, Timestamp recordTime) {
+        this.id = id;
+        this.carID = carID;
+        this.enter = enter;
+        this.exist = exist;
+        this.recordTime = recordTime;
+        this.isDelete = isDelete;
+    }
+
     @ApiIgnore
     public String getParkTimeFormat() {
         SimpleDateFormat time = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");

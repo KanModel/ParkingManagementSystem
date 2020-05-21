@@ -38,7 +38,7 @@ public class ParkingScatterController {
                 scatter.setUse(use);
                 scatterRepository.save(scatter);
                 result.put("result", "No." + parkID + " change statue");
-                scatterRecordRepository.save(new ParkScatterRecord());
+                scatterRecordRepository.save(new ParkScatterRecord(parkID, use));
             }else result.put("result", "Nothing change");
         }else {
             result.put("result", "Not exist");

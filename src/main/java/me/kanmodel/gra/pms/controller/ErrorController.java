@@ -1,7 +1,9 @@
 package me.kanmodel.gra.pms.controller;
 
+import me.kanmodel.gra.pms.dao.OptionRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -20,9 +22,12 @@ import springfox.documentation.annotations.ApiIgnore;
 public class ErrorController {
     private static Logger logger = LoggerFactory.getLogger(ErrorController.class);
 
+    @Autowired
+    private OptionRepository optionRepository;
+
     @ModelAttribute
     public void generalModel(Model model){
-        model.addAttribute("site_name", "PMS");
+        model.addAttribute("site_name", optionRepository.findByKey("site_name").get().getValue());
     }
 
     @ExceptionHandler(Exception.class)

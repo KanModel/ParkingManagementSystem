@@ -1,8 +1,10 @@
 package me.kanmodel.gra.pms.controller;
 
 import lombok.Data;
+import me.kanmodel.gra.pms.dao.OptionRepository;
 import me.kanmodel.gra.pms.entity.ParkScatter;
 import me.kanmodel.gra.pms.entity.User;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
@@ -24,10 +26,12 @@ import javax.servlet.http.HttpServletResponse;
 @Controller
 @ApiIgnore
 public class MainController {
+    @Autowired
+    private OptionRepository optionRepository;
 
     @ModelAttribute
     public void generalModel(Model model) {
-        model.addAttribute("site_name", "PMS");
+        model.addAttribute("site_name", optionRepository.findByKey("site_name").get().getValue());
     }
 
     @RequestMapping(value = {"/index", "/"})
