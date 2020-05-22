@@ -37,7 +37,7 @@
                             empty.push([result[i].x, result[i].y, i + 1]);
                         }
                     }
-                    console.log(use, empty, result);
+                    console.log("use", use, "empty", empty, "result", result);
                 },
                 error: function (errorMsg) {
                     alert("获取后台数据失败！");
@@ -57,11 +57,11 @@
             animation: false,
             legend: {
                 right: 10,
-                data: ['使用中', '未使用']
+                data: ['占用', '空闲']
             },
             series: [
                 {
-                    name: '使用中',
+                    name: '占用',
                     symbolSize: 20,
                     data: use,
                     type: 'scatter',
@@ -78,7 +78,7 @@
                     }
                 },
                 {
-                    name: '未使用',
+                    name: '空闲',
                     symbolSize: 20,
                     data: empty,
                     type: 'scatter',
