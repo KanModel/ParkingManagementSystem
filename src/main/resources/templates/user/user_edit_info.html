@@ -21,22 +21,10 @@
                 </label>
                 <button type="submit" class=" btn btn-default">修改</button>
             </form>
-            <br>
-            <form th:action="@{/user/edit/mpass}" method="post">
-                <label>原密码：
-                    <input type="password" th:name="old_pass">
-                </label>
-                <label>新密码：
-                    <input type="password" th:name="new_pass" id="new_pass">
-                </label>
-                <label>确认新密码：
-                    <input type="password" id="new_pass_confirm">
-                </label>
-                <button type="submit" class=" btn btn-default">修改</button>
-            </form>
-            <br>
-            <p th:text="${res}"></p>
         </div>
+    </div>
+    <div>
+        <p th:text="${res}"></p>
     </div>
 </div>
 <div th:replace="fragments/footer :: footer"></div>

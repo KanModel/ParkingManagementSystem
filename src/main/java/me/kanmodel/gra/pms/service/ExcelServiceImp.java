@@ -4,7 +4,6 @@ import me.kanmodel.gra.pms.dao.RecordRepository;
 import me.kanmodel.gra.pms.dao.ScatterRecordRepository;
 import me.kanmodel.gra.pms.entity.ParkRecord;
 import me.kanmodel.gra.pms.entity.ParkScatterRecord;
-import me.kanmodel.gra.pms.util.ExcelImportUtils;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -93,12 +92,8 @@ public class ExcelServiceImp {
 
             //根据版本选择创建Workbook的方式
             Workbook wb = null;
-            //根据文件名判断文件是2003版本还是2007版本
-            if (ExcelImportUtils.isExcel2007(fileName)) {
-//                wb = new XSSFWorkbook(is);
-            } else {
-                wb = new HSSFWorkbook(is);
-            }
+
+            wb = new HSSFWorkbook(is);
             //根据excel里面的内容读取信息
             return readExcel(tableName, wb, tempFile);
         } catch (Exception e) {

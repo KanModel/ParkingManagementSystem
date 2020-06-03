@@ -26,6 +26,10 @@ public class ParkScatter {
     @Column(name = "is_use", columnDefinition = "bit(1) default 0")
     private Boolean use;
 
+    @ApiModelProperty("设备编号")
+    @Column(name = "device_id", columnDefinition = "varchar(20)  default ''")
+    private String deviceID;
+
     public ParkScatter() {
     }
 
@@ -33,5 +37,12 @@ public class ParkScatter {
         this.x = x;
         this.y = y;
         this.use = use;
+    }
+
+    public ParkScatter(double x, double y, Boolean use, String deviceID) {
+        this.x = x;
+        this.y = y;
+        this.use = use;
+        this.deviceID = deviceID;
     }
 }

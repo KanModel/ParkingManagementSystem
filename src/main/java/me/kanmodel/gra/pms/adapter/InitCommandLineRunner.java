@@ -43,6 +43,9 @@ public class InitCommandLineRunner implements CommandLineRunner {
         if(isFirst && !optionRepository.findByKey("site_name").isPresent()){
             ArrayList<me.kanmodel.gra.pms.entity.Option> options = new ArrayList<>();
             options.add(new Option("site_name", "PMS", "网站名称"));
+            options.add(new Option("fee_per_hours", "10", "每小时停车费"));
+            options.add(new Option("free_hours", "1", "免费停车时间"));
+            options.add(new Option("default_password", "123", "默认用户密码"));
             optionRepository.saveAll(options);
         }
 

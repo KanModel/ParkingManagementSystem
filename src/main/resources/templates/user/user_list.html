@@ -16,6 +16,12 @@
             $("#passId").val(ID);
         }
 
+        function deleteUser(ID, pageNo) {
+            $("#delete_no").val(pageNo);
+            $("#delete_id").val(ID);
+            console.log("delete User" + ID, pageNo)
+        }
+
         function getUser(id) {
             empty = [];
             use = [];
@@ -110,7 +116,7 @@
                     <!--                        </label>-->
                     <!--                        <button type="submit" th:name="id" th:value="${user.id}" class="btn btn-primary">修改</button>-->
                     <!--                    </form>-->
-                    <button class="btn btn-primary form-inline"
+                    <button class="btn btn-info form-inline"
                             data-toggle="modal"
                             data-target="#changePassword"
                             th:onclick="'javascript:passwordID('+${user.id}+')'">
@@ -118,12 +124,18 @@
                     </button>
                 </td>
                 <td>
-                    <form th:action="@{/user/del}" method="post">
-                        <input type="hidden" th:name="no" th:value="${pageNo}" class="form-control">
-                        <button type="submit" th:name="id" th:value="${user.id}" th:id="'user-id-'+${user.id}"
-                                class="btn-danger btn">删除
-                        </button>
-                    </form>
+<!--                    <form th:action="@{/user/del}" method="post">-->
+<!--                        <input type="hidden" th:name="no" th:value="${pageNo}" class="form-control">-->
+<!--                        <button type="submit" th:name="id" th:value="${user.id}" th:id="'user-id-'+${user.id}"-->
+<!--                                class="btn-danger btn">删除-->
+<!--                        </button>-->
+<!--                    </form>-->
+                    <button class="btn-danger btn"
+                            data-toggle="modal"
+                            data-target="#deleteUser"
+                            th:onclick="'javascript:deleteUser('+${user.id}+', '+ ${pageNo} + ')'">
+                        删除
+                    </button>
                 </td>
             </tr>
         </th:block>
@@ -221,6 +233,29 @@
                     <button type="submit" id="passId" name="id" value="" class="btn btn-primary">提交更改</button>
                 </div>
             </form>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
+<div class="modal fade" id="deleteUser" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                    &times;
+                </button>
+                <h4 class="modal-title">
+                    确定删除此用户
+                </h4>
+            </div>
+            <div class="modal-footer">
+                <form th:action="@{/user/del}" method="post">
+                    <input type="hidden" name="no" value="" id="delete_no" class="form-control">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                    <!--                <button type="submit" id="passId" name="id" value="" class="btn btn-primary">提交更改</button>-->
+                    <button type="submit" name="id" value="" id="delete_id" class="btn-danger btn">确定</button>
+                </form>
+            </div>
         </div><!-- /.modal-content -->
     </div><!-- /.modal -->
 </div>

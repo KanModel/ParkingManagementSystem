@@ -16,17 +16,20 @@
         <table class="table">
             <tr><td>用户名</td><td><span sec:authentication="name"></td></tr>
             <tr><td>ID</td><td><span sec:authentication="principal.id"></td></tr>
-            <tr><td>昵称</td><td><span sec:authentication="principal.display"></td></tr>
+            <tr><td>显示名</td><td><span sec:authentication="principal.display"></td></tr>
             <tr><td>注册时间</td><td><span sec:authentication="principal.registered"></td></tr>
         </table>
         <div class="panel-body">
-            <a class="btn btn-primary" th:href="@{/user/edit}">信息修改</a>
+            <div class="container">
+                <a class="btn btn-primary" th:href="@{/user/edit/info}">信息修改</a>
+                <a class="btn btn-primary" th:href="@{/user/edit/password}">密码修改</a>
+            </div>
 
-            <div sec:authorize="hasAnyRole('ROLE_ADMIN')">
+            <div class="container" sec:authorize="hasAnyRole('ROLE_ADMIN')">
                 <br>
                 <a class="btn btn-danger" th:href="@{/user}">用户管理</a>
             </div>
-            <div sec:authorize="hasAnyRole('ROLE_SUPER')">
+            <div class="container" sec:authorize="hasAnyRole('ROLE_SUPER')">
                 <br>
                 <a class="btn btn-danger" th:href="@{/swagger-ui.html}">接口查看</a>
             </div>

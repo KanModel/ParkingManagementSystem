@@ -64,10 +64,10 @@ public class UserController {
 
     @GetMapping("/user/{id}")
     @ResponseBody
-    public User getUser(@PathVariable(name = "id") Long id){
+    public User getUser(@PathVariable(name = "id") Long id) {
         Optional<User> tmp = userRepository.findById(id);
         User user = null;
-        if (tmp.isPresent()){
+        if (tmp.isPresent()) {
             user = tmp.get();
         }
         return user;
@@ -119,16 +119,26 @@ public class UserController {
         return "user/user";
     }
 
+    /**
+     * 随机生成用户
+     *
+     * @param count
+     * @param pass
+     * @param model
+     * @return
+     */
     @RequestMapping(value = "/user/randomadd", method = RequestMethod.POST)
     public String randomUserGenerate(@RequestParam(value = "count", required = false, defaultValue = "10") int count,
                                      @RequestParam(value = "pass", required = false, defaultValue = "123") String pass,
                                      Model model) {
-        System.out.println("Generate count:" + count + " default Password:" + pass);
+        String password = pass;
+        if (password.equals("123")) password = optionRepository.findByKey("default_password").get().getValue();
+        logger.info("Generate count:" + count + " default Password:" + password);
         String res = "添加用户：";
         for (int i = 0; i < count; i++) {
             String login = getRandomString(5);
             if (!userRepository.findByLogin(login).isPresent()) {
-                User user = new User(login, bCryptPasswordEncoder.encode(pass));
+                User user = new User(login, bCryptPasswordEncoder.encode(password));
                 userRepository.save(user);
                 model.addAttribute("add_res", "添加用户[" + login + "]成功！");
                 res += " " + login;
@@ -164,7 +174,7 @@ public class UserController {
                 if (name.equals("")) user = Optional.empty();
                 else user = userRepository.findByLogin(name);
             }
-        }catch (NumberFormatException e){
+        } catch (NumberFormatException e) {
             return modelAndView.addObject("find_res", "id应该为数字！");
         }
 
@@ -226,32 +236,45 @@ public class UserController {
     }
 
     @RequestMapping("/user/edit")
-    public String edit(){return "user/user_edit"; }
+    public String edit() {
+        return "user/user_edit";
+    }
+
+    @RequestMapping("/user/edit/password")
+    public String editPassword() {
+        return "user/user_edit_password";
+    }
+
+    @RequestMapping("/user/edit/info")
+    public String editDisplay() {
+        return "user/user_edit_info";
+    }
 
     @RequestMapping(value = "/user/edit/mpass", method = RequestMethod.POST)
-    public ModelAndView editUserSelfPass(@RequestParam(value = "old_pass") String oldPass,
-                                         @RequestParam(value = "new_pass") String newPass) {
+    public String editUserSelfPass(@RequestParam(value = "old_pass") String oldPass,
+                                   @RequestParam(value = "new_pass") String newPass,
+                                   Model model) {
         User sUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         User user = userRepository.findById(sUser.getId()).get();
-        ModelAndView modelAndView = new ModelAndView("redirect:/space");
         if (bCryptPasswordEncoder.matches(oldPass, user.getPassword())) {
             user.setPass(bCryptPasswordEncoder.encode(newPass));
-            modelAndView.addObject("res", "成功更改密码!");
+//            modelAndView.addObject("res", "成功更改密码!");
+            model.addAttribute("res", "成功更改密码!");
             userRepository.save(user);
         } else {
-            modelAndView.addObject("res", "密码错误!");
+            model.addAttribute("res", "密码错误!");
         }
-        return modelAndView;
+        return "user/user_edit_password";
     }
 
     @RequestMapping(value = "/user/edit/display", method = RequestMethod.POST)
-    public ModelAndView editUserDisplay(@RequestParam(value = "display", required = false) String display) {
+    public String editUserDisplay(@RequestParam(value = "display", required = false) String display,
+                                  Model model) {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         user.setDisplay(display);
         userRepository.save(user);
-        ModelAndView modelAndView = new ModelAndView("redirect:/space");
-        modelAndView.addObject("res", "更改显示名为" + display + "!");
-        return modelAndView;
+        model.addAttribute("res", "更改显示名为" + display + "!");
+        return "user/user_edit_info";
     }
 
     @RequestMapping(value = "/user/edit/role", method = RequestMethod.POST)
