@@ -21,6 +21,12 @@
                 </label>
                 <button type="submit" class=" btn btn-default">修改</button>
             </form>
+            <form th:action="@{/user/edit/email}" method="post">
+                <label>修改邮箱：
+                    <input class="form-control" type="text" th:name="email">
+                </label>
+                <button type="submit" class=" btn btn-default">修改</button>
+            </form>
         </div>
     </div>
     <div>

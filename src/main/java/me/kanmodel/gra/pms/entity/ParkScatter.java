@@ -30,6 +30,12 @@ public class ParkScatter {
     @Column(name = "device_id", columnDefinition = "varchar(20)  default ''")
     private String deviceID;
 
+    public void update(double x, double y, String deviceID){
+        this.x = x;
+        this.y = y;
+        this.deviceID = deviceID;
+    }
+
     public ParkScatter() {
     }
 

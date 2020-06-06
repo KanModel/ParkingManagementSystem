@@ -9,12 +9,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
+import java.util.regex.Pattern;
 
 /**
  * 管理车位分布及使用情况
@@ -43,6 +41,51 @@ public class ParkingScatterController {
         }else {
             result.put("result", "Not exist");
             return new ResponseEntity<>(result, HttpStatus.BAD_REQUEST);
+        }
+
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
+    @PostMapping("/add")
+    @ApiOperation("增加分布")
+    private ResponseEntity<Map<String, String>> addScatter(double x, double y, String deviceID){
+        Map<String, String> result = new HashMap<>();
+
+//        Pattern pattern = Pattern.compile("^\\d+(\\.\\d+)?$");//判断是否为正小数
+        if (x < 0 || y < 0){
+            result.put("result", "x or y not positive!");
+            return new ResponseEntity<>(result, HttpStatus.BAD_REQUEST);
+        }
+        ParkScatter newScatter = new ParkScatter(x, y, false, deviceID);
+        scatterRepository.save(newScatter);
+
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
+    @DeleteMapping("/delete")
+    @ApiOperation("删除分布")
+    private ResponseEntity<Map<String, String>> deleteScatter(Long id){
+        Map<String, String> result = new HashMap<>();
+
+        if (scatterRepository.findById(id).isPresent()){
+            scatterRepository.deleteById(id);
+        }else {
+            result.put("result", id + " ParkScatter not exist!");
+            return new ResponseEntity<>(result, HttpStatus.BAD_REQUEST);
+        }
+
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
+    @DeleteMapping("/edit")
+    @ApiOperation("编辑分布")
+    private ResponseEntity<Map<String, String>> editScatter(Long id, double x, double y, String deviceID){
+        Map<String, String> result = new HashMap<>();
+
+        Optional<ParkScatter> optionalParkScatter = scatterRepository.findById(id);
+        if (optionalParkScatter.isPresent()){
+            ParkScatter parkScatter = optionalParkScatter.get();
+            parkScatter.update(x, y, deviceID);
         }
 
         return new ResponseEntity<>(result, HttpStatus.OK);

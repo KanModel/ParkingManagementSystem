@@ -28,19 +28,27 @@
                 </div>
             </form>
             <div class="row">
-                <span class="col-sm-1"></span>
-                <a class="btn btn-primary" th:href="@{/park/export/parkrecord/excel}">记录导出</a>
-                <a class="btn btn-danger"
-                   data-toggle="modal"
-                   data-target="#myModal">
-                    记录导入
-                </a>
-                <a class="btn btn-danger"
-                   data-toggle="modal"
-                   data-target="#confirmModal">
-                    清空记录
-                </a>
-                <p th:text="${'已使用车位: ' + parkCount}" class="col-sm-2"></p>
+<!--                <span class="col-sm-1"></span>-->
+                <div class="col-sm-2">
+                    <h4 class="text-info" th:text="${'已使用车位: ' + parkCount}"></h4>
+                </div>
+                <div class="col-sm-2">
+                    <a class="btn btn-primary" th:href="@{/park/export/parkrecord/excel}">记录导出</a>
+                </div>
+                <div class="col-sm-2">
+                    <a class="btn btn-danger"
+                       data-toggle="modal"
+                       data-target="#myModal">
+                        记录导入
+                    </a>
+                </div>
+                <div class="col-sm-2">
+                    <a class="btn btn-danger"
+                       data-toggle="modal"
+                       data-target="#confirmModal">
+                        清空记录
+                    </a>
+                </div>
             </div>
             <br>
             <!--    <table class="table table-striped table-bordered">-->

@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
+import java.util.regex.Pattern;
 
 /**
  * @description: 接收对用户增删改查的请求
@@ -274,6 +275,22 @@ public class UserController {
         user.setDisplay(display);
         userRepository.save(user);
         model.addAttribute("res", "更改显示名为" + display + "!");
+        return "user/user_edit_info";
+    }
+
+    @RequestMapping(value = "/user/edit/email", method = RequestMethod.POST)
+    public String editUserEmail(@RequestParam(value = "email", required = false) String email,
+                                  Model model) {
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String check = "^([a-z0-9A-Z]+[-|\\.]?)+[a-z0-9A-Z]@([a-z0-9A-Z]+(-[a-z0-9A-Z]+)?\\.)+[a-zA-Z]{2,}$";
+        Pattern regex = Pattern.compile(check);
+        if (!regex.matcher(email).matches()){
+            model.addAttribute("res", "邮箱格式不正确!");
+            return "user/user_edit_info";
+        }
+        user.setEmail(email);
+        userRepository.save(user);
+        model.addAttribute("res", "更改用户邮箱为" + email + "!");
         return "user/user_edit_info";
     }
 
