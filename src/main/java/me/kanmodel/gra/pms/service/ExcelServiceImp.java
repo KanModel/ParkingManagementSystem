@@ -2,7 +2,9 @@ package me.kanmodel.gra.pms.service;
 
 import me.kanmodel.gra.pms.dao.RecordRepository;
 import me.kanmodel.gra.pms.dao.ScatterRecordRepository;
+import me.kanmodel.gra.pms.dao.ScatterRepository;
 import me.kanmodel.gra.pms.entity.ParkRecord;
+import me.kanmodel.gra.pms.entity.ParkScatter;
 import me.kanmodel.gra.pms.entity.ParkScatterRecord;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Row;
@@ -32,6 +34,8 @@ public class ExcelServiceImp {
     private RecordRepository recordRepository;
     @Autowired
     private ScatterRecordRepository scatterRecordRepository;
+    @Autowired
+    private ScatterRepository scatterRepository;
 
     private static final String TGA = "ExcelService : ";
 
@@ -109,8 +113,6 @@ public class ExcelServiceImp {
             }
         }
         return "导入出错！请检查数据格式！";
-
-
     }//batchImport
 
     /**
@@ -132,6 +134,9 @@ public class ExcelServiceImp {
             case "park_scatter_record":
                 logger.info("开始导入 park_scatter_record 数据");
                 return readParkScatterRecordExcelValue(wb, file);
+            case "park_scatter":
+                logger.info("开始导入 park_scatter 数据");
+                return readParkScatterExcelValue(wb, file);
         }
         return null;
     }
@@ -290,6 +295,68 @@ public class ExcelServiceImp {
         }
 
         result = "导入成功，共" + records.size() + "条数据！";
+        logger.info(result);
+
+        return result;
+    }
+
+    private String readParkScatterExcelValue(Workbook wb, File tempFile) {
+
+        //得到第一个sheet
+        Sheet sheet = getSheet(wb);
+        //得到Excel的行数
+        int totalRows = getTotalRows(wb);
+        //总列数
+        int totalCells = getTotalCell(wb);
+        //得到Excel的列数，第二行算起
+
+        List<ParkScatter> parkScatters = new ArrayList<>();
+        ParkScatter scatter;
+
+        String br = "<br/>";
+        //循环excel中的每一行数据
+        for (int r = 1; r < totalRows; r++) {
+            String rowMessage = "";
+            Row row = sheet.getRow(r);
+            if (row == null) {
+                errorMsg += br + "第" + (r + 1) + "行数据有问题，请仔细检查！";
+                continue;
+            }
+
+//            String[] tableHeaders = {"park_scatter_record_id", "record_time", "scatter_id", "is_use", "is_delete"};
+
+            scatter = new ParkScatter(
+                    Long.valueOf(row.getCell(0).getStringCellValue()),
+                    Boolean.valueOf(row.getCell(1).getStringCellValue()),
+                    Double.parseDouble(row.getCell(2).getStringCellValue()),
+                    Double.parseDouble(row.getCell(3).getStringCellValue()),
+                    row.getCell(4).getStringCellValue()
+            );
+
+            //拼接每行的错误提示
+            if (!StringUtils.isEmpty(rowMessage)) {
+
+                errorMsg += br + "第" + (r + 1) + "行，" + rowMessage;
+                System.out.println(TGA + errorMsg);
+
+            } else {
+                //数据正常将其添加到集合中
+                parkScatters.add(scatter);
+            }//end if
+
+        }//遍历完每一行数据
+
+        //删除上传的临时文件
+        if (tempFile.exists()) {
+            tempFile.delete();
+        }
+
+        //将数据导入到Mysql中
+        for (ParkScatter t : parkScatters) {
+            scatterRepository.save(t);
+        }
+
+        result = "导入成功，共" + parkScatters.size() + "条数据！";
         logger.info(result);
 
         return result;

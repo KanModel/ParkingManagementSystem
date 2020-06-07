@@ -2,7 +2,9 @@ package me.kanmodel.gra.pms.service;
 
 import me.kanmodel.gra.pms.dao.RecordRepository;
 import me.kanmodel.gra.pms.dao.ScatterRecordRepository;
+import me.kanmodel.gra.pms.dao.ScatterRepository;
 import me.kanmodel.gra.pms.entity.ParkRecord;
+import me.kanmodel.gra.pms.entity.ParkScatter;
 import me.kanmodel.gra.pms.entity.ParkScatterRecord;
 import org.apache.poi.hssf.usermodel.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,9 +25,14 @@ public class ParkLogExporter {
     private RecordRepository recordRepository;
     @Autowired
     private ScatterRecordRepository scatterRecordRepository;
+    @Autowired
+    private ScatterRepository scatterRepository;
 
     private SimpleDateFormat dateFormat = new SimpleDateFormat("YYYY_MM_dd_HH_mm_ss");
 
+    /**
+     * 获取停车记录Excel结果
+     */
     public ResponseEntity<byte[]> getParkingRecordResult() throws IOException {
         Date now = new Date();
         String[] tableHeaders = {"park_record_id", "car_id", "enter", "exist", "is_delete", "record_time"};
@@ -72,6 +79,9 @@ public class ParkLogExporter {
         return new ResponseEntity<>(byteArrayOutputStream.toByteArray(), headers, HttpStatus.OK);
     }
 
+    /**
+     * 获取分布记录Excel结果
+     */
     public ResponseEntity<byte[]> getScatterRecordResult() throws IOException {
         Date now = new Date();
         String[] tableHeaders = {"park_scatter_record_id", "record_time", "scatter_id", "is_use", "is_delete"};
@@ -109,6 +119,54 @@ public class ParkLogExporter {
         headers.add("Cache-Control", "no-cache, no-store, must-revalidate");
         headers.add("Cache-Type", "application/msword");
         headers.add("Content-Disposition", "attachment; filename=" + dateFormat.format(now) + "_ScatterRecordResult.xls");
+        headers.add("Pragma", "no-cache");
+        headers.add("Expires", "0");
+        headers.add("Last-Modified", new Date().toString());
+        headers.add("ETag", String.valueOf(System.currentTimeMillis()));
+
+        return new ResponseEntity<>(byteArrayOutputStream.toByteArray(), headers, HttpStatus.OK);
+    }
+
+    /**
+     * 获取分布Excel结果
+     */
+    public ResponseEntity<byte[]> getScatterResult() throws IOException {
+        Date now = new Date();
+        String[] tableHeaders = {"park_scatter_id", "is_use", "x", "y", "device_id"};
+
+        List<ParkScatter> scatterList = scatterRepository.findAll();
+
+        //声明工作簿
+        HSSFWorkbook workbook = new HSSFWorkbook();
+        //声明表格
+        HSSFSheet sheet = workbook.createSheet("park_scatter");
+        //创建行
+        HSSFRow hssfRow = sheet.createRow(0);
+
+        //添加表头
+        for (int i = 0; i < tableHeaders.length; i++) {
+            HSSFCell cell = hssfRow.createCell(i);
+            HSSFRichTextString text = new HSSFRichTextString(tableHeaders[i]);
+            cell.setCellValue(text);
+        }
+
+        int index = 1;
+        for (ParkScatter scatter: scatterList){
+            hssfRow = sheet.createRow(index++);
+            hssfRow.createCell(0).setCellValue(String.valueOf(scatter.getId()));
+            hssfRow.createCell(1).setCellValue(String.valueOf(scatter.getUse()));
+            hssfRow.createCell(2).setCellValue(String.valueOf(scatter.getX()));
+            hssfRow.createCell(3).setCellValue(String.valueOf(scatter.getY()));
+            hssfRow.createCell(4).setCellValue(String.valueOf(scatter.getDeviceID()));
+        }
+
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        workbook.write(byteArrayOutputStream);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Cache-Control", "no-cache, no-store, must-revalidate");
+        headers.add("Cache-Type", "application/msword");
+        headers.add("Content-Disposition", "attachment; filename=" + dateFormat.format(now) + "_ScatterResult.xls");
         headers.add("Pragma", "no-cache");
         headers.add("Expires", "0");
         headers.add("Last-Modified", new Date().toString());

@@ -77,7 +77,7 @@ public class ParkingScatterController {
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
-    @DeleteMapping("/edit")
+    @PostMapping("/edit")
     @ApiOperation("编辑分布")
     private ResponseEntity<Map<String, String>> editScatter(Long id, double x, double y, String deviceID){
         Map<String, String> result = new HashMap<>();

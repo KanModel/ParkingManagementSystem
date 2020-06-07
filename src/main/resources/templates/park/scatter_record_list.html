@@ -9,7 +9,7 @@
 <body>
 <div th:replace="fragments/header :: header"></div>
 <div class="container">
-    <div class="panel panel-primary">
+    <div class="panel panel-default">
         <div class="panel-heading">
             <h3 class="panel-title">车位使用记录</h3>
         </div>
@@ -29,7 +29,9 @@
             </form>
             <div class="row">
                 <span class="col-sm-1"></span>
-                <a class="btn btn-primary" th:href="@{/park/export/parkscatter/excel}">记录导出</a>
+                <a class="btn btn-primary" th:href="@{/park/export/scatterrecord/excel}">
+                    记录导出
+                </a>
                 <a class="btn btn-danger"
                    data-toggle="modal"
                    data-target="#myModal">
@@ -40,16 +42,8 @@
                    data-target="#confirmModal">
                     清空记录
                 </a>
-<!--                <form class="form-inline col-sm-2" method="post" th:action="@{/park/upload/parkscatter/excel}" enctype="multipart/form-data">-->
-<!--                    <div class="form-group">-->
-<!--                        <input type="file" class="form-control" name="file">-->
-<!--                        <button type="submit" class="btn btn-danger" value="记录导入"></button>-->
-<!--                    </div>-->
-<!--                </form>-->
             </div>
             <br>
-            <!--        <span th:text="${'已使用车位: ' + parkCount}"></span>-->
-            <!--    <table class="table table-striped table-bordered">-->
             <table class="table">
                 <tr>
                     <td>序号</td>
@@ -115,7 +109,7 @@
     }
 </script>
 <!--Modal-->
-<form method="post" th:action="@{/park/upload/parkscatter/excel}" enctype="multipart/form-data" onsubmit="return checkEmpty()">
+<form method="post" th:action="@{/park/upload/scatterrecord/excel}" enctype="multipart/form-data" onsubmit="return checkEmpty()">
     <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">

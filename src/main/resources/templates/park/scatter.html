@@ -109,7 +109,7 @@
             myChart.setOption(option);
         }, 1000);
     </script>
-    <a class="btn btn-info" th:href="@{/park/scatter/list}">分布管理</a>
+    <a sec:authorize="hasAnyRole('ROLE_SUPER')" class="btn btn-info" th:href="@{/park/scatter/list}">分布管理</a>
 </div>
 </body>
 <div th:replace="fragments/footer :: footer"></div>

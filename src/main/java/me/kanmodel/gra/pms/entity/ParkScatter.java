@@ -30,7 +30,7 @@ public class ParkScatter {
     @Column(name = "device_id", columnDefinition = "varchar(20)  default ''")
     private String deviceID;
 
-    public void update(double x, double y, String deviceID){
+    public void update(double x, double y, String deviceID) {
         this.x = x;
         this.y = y;
         this.deviceID = deviceID;
@@ -46,6 +46,14 @@ public class ParkScatter {
     }
 
     public ParkScatter(double x, double y, Boolean use, String deviceID) {
+        this.x = x;
+        this.y = y;
+        this.use = use;
+        this.deviceID = deviceID;
+    }
+
+    public ParkScatter(Long id, Boolean use, double x, double y, String deviceID) {
+        this.id = id;
         this.x = x;
         this.y = y;
         this.use = use;

@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4" lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <title th:text="${'车位分布列表 - ' + site_name}"></title>
+    <link rel="stylesheet" type="text/css" href="/webjars/bootstrap/3.3.7/css/bootstrap.min.css"/>
+</head>
+<body>
+<div th:replace="fragments/header :: header"></div>
+<div class="container">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title">车位分布列表</h3>
+        </div>
+        <div class="panel-body">
+            <form>
+                <div class="form-group">
+                    <div class="input-group mb-3">
+                        <span class="input-group-addon">通过设备号查找记录</span>
+                        <input type="text" class="form-control" name="deviceID" placeholder="请输入设备号..."/>
+                        <span class="input-group-btn">
+                <button type="submit" class="btn btn-primary">查找</button>
+            </span>
+                    </div>
+                </div>
+            </form>
+            <div class="row">
+                <div class="col-sm-2">
+<!--                    <a class="btn btn-primary">增加分布</a>-->
+                    <button class="btn btn-primary"
+                            data-toggle="modal"
+                            data-target="#addScatter">
+                        增加分布
+                    </button>
+                </div>
+                <div class="col-sm-2">
+                    <a class="btn btn-primary" th:href="@{/park/export/parkscatter/excel}">分布导出</a>
+                </div>
+                <div class="col-sm-2">
+                    <a class="btn btn-danger"
+                       data-toggle="modal"
+                       data-target="#myModal">
+                        分布导入
+                    </a>
+                </div>
+                <div class="col-sm-2">
+                    <a class="btn btn-danger"
+                       data-toggle="modal"
+                       data-target="#confirmModal">
+                        清空分布
+                    </a>
+                </div>
+            </div>
+            <br>
+            <table class="table">
+                <tr>
+                    <td class="col-sm-1">序号</td>
+                    <td class="col-sm-2">车位号</td>
+                    <td class="col-sm-2">X</td>
+                    <td class="col-sm-2">Y</td>
+                    <td class="col-sm-1">使用情况</td>
+                    <td class="col-sm-2">设备号</td>
+                    <td class="col-sm-1"></td>
+                    <td class="col-sm-1"></td>
+                </tr>
+                <th:block th:each="scatter, iter:${scatterList}">
+                    <tr>
+                        <td th:text="${iter.index + 1}"></td>
+                        <td th:text="${scatter.id}"></td>
+                        <td th:text="${scatter.x}"></td>
+                        <td th:text="${scatter.y}"></td>
+                        <td>
+                            <th:block th:if="${scatter.use}">使用</th:block>
+                            <th:block th:unless="${scatter.use}">空闲</th:block>
+                        </td>
+                        <td th:text="${scatter.deviceID}"></td>
+                        <td>
+                            <button class="btn btn-primary"
+                                    data-toggle="modal"
+                                    data-target="#editScatter"
+                                    th:onclick="'javascript:Values('+${scatter.id}+')'">
+                                编辑
+                            </button>
+                        </td>
+                        <td>
+                            <button class="btn btn-danger"
+                                    data-toggle="modal"
+                                    data-target="#deleteScatter"
+                                    th:onclick="'javascript:deleteScatter('+${scatter.id}+')'">
+                                删除
+                            </button>
+                        </td>
+                </th:block>
+            </table>
+            <div align="center">
+                <nav aria-label="Page navigation">
+                    <ul class="pagination">
+                        <th:block th:if="${pageNo} > 1">
+                            <li><a th:href="'/park/scatter/list?no=' + ${pageNo - 1} + '&deviceID=' + ${deviceID}"
+                                   aria-label="Previous">
+                                <span aria-hidden="true">&laquo;</span>
+                            </a></li>
+                        </th:block>
+                        <th:block th:unless="${pageNo} > 1">
+                            <li class="disabled">
+                                <span aria-hidden="true">&laquo;</span>
+                            </li>
+                        </th:block>
+
+                        <li><span th:text="${pageNo + '/' + pageCount}"></span></li>
+
+                        <th:block th:if="${pageNo} < ${pageCount}">
+                            <li><a th:href="'/park/scatter/list?no=' + ${pageNo + 1} + '&deviceID=' + ${deviceID}"
+                                   aria-label="Next">
+                                <span aria-hidden="true">&raquo;</span>
+                            </a></li>
+                        </th:block>
+                        <th:block th:unless="${pageNo} < ${pageCount}">
+                            <li class="disabled">
+                                <span aria-hidden="true">&raquo;</span>
+                            </li>
+                        </th:block>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </div>
+    <p th:text="${res}"></p>
+</div>
+<script>
+    function checkEmpty() {
+        if(document.getElementById("txt_file").value == null || document.getElementById("txt_file").value == ""){
+            alert("请选择上传文件");
+            return false;
+        }
+        return true;
+    }
+
+    function Values(ID) {
+        $("#id").val(ID);
+    }
+
+    function deleteScatter(ID) {
+        $("#delete_id").val(ID);
+    }
+</script>
+<!--Modal-->
+<form method="post" th:action="@{/park/upload/parkscatter/excel}" enctype="multipart/form-data" onsubmit="return checkEmpty()">
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">请选择Excel文件</h4>
+                </div>
+                <div class="modal-body">
+                    <input type="file" name="file" id="txt_file"/>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                    <button type="submit" class="btn btn-primary">提交更改</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+<!--Modal-->
+<form method="post" th:action="@{/park/delete/scatter/all}" enctype="multipart/form-data">
+    <div class="modal fade" id="confirmModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">清空分布</h4>
+                </div>
+                <div class="modal-body">
+                    <p class="text-danger">确定清空分布吗？</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                    <button type="submit" class="btn btn-danger">确定</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+<!--Modal-->
+<form method="post" th:action="@{/park/add/scatter}" enctype="multipart/form-data">
+    <div class="modal fade" id="addScatter" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">增加分布</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <label>X：
+                            <input class="form-control" type="text" th:name="x">
+                        </label>
+                        <label>Y：
+                            <input class="form-control" type="text" th:name="y">
+                        </label>
+                        <label>设备号：
+                            <input class="form-control" type="text" th:name="deviceID">
+                        </label>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                    <button type="submit" class="btn btn-danger">确定</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+<!--Modal-->
+<form method="post" th:action="@{/park/edit/scatter}" enctype="multipart/form-data">
+    <div class="modal fade" id="editScatter" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">编辑分布</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <input id="id" name="id" type="hidden" value="">
+                        <label>X：
+                            <input class="form-control" type="text" th:name="x">
+                        </label>
+                        <label>Y：
+                            <input class="form-control" type="text" th:name="y">
+                        </label>
+                        <label>设备号：
+                            <input class="form-control" type="text" th:name="deviceID">
+                        </label>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                    <button type="submit" class="btn btn-danger">确定</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+<!--Modal-->
+<div class="modal fade" id="deleteScatter" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                    &times;
+                </button>
+                <h4 class="modal-title">
+                    确定删除此分布
+                </h4>
+            </div>
+            <div class="modal-footer">
+                <form th:action="@{/park/delete/scatter}" method="post">
+                    <input type="hidden" name="no" value="" id="delete_no" class="form-control">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                    <button type="submit" name="id" value="" id="delete_id" class="btn-danger btn">确定</button>
+                </form>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
+<div th:replace="fragments/footer :: footer"></div>
+</body>
+</html>
