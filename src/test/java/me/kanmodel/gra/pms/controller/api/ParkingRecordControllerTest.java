@@ -1,72 +1,48 @@
 package me.kanmodel.gra.pms.controller.api;
 
-import io.swagger.annotations.ApiOperation;
 import me.kanmodel.gra.pms.dao.OptionRepository;
 import me.kanmodel.gra.pms.dao.RecordRepository;
 import me.kanmodel.gra.pms.entity.ParkRecord;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.mock.web.MockHttpSession;
+import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.context.WebApplicationContext;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
-/**
- * 管理入库出库
- */
-@Controller
-@RequestMapping("/api/park")
-public class ParkingRecordController {
+import static org.junit.Assert.*;
 
+@RunWith(SpringRunner.class)
+@SpringBootTest
+public class ParkingRecordControllerTest {
     @Autowired
     private RecordRepository recordRepository;
     @Autowired
     private OptionRepository optionRepository;
 
-    @PostMapping("/enter")
-    @ApiOperation("入库")
-    private ResponseEntity<Map<String, String>> enter(@RequestParam(required = false) String carID) throws UnsupportedEncodingException {
+    @Test
+    public void feeCal() throws UnsupportedEncodingException {
+        String carID = "苏EA13X7";
         Map<String, String> result = new HashMap<>();
-        if (carID == null) {
-            result.put("status", "missing parameters");
-            return new ResponseEntity<>(result, HttpStatus.BAD_REQUEST);
-        }
-        carID = URLDecoder.decode(carID, "UTF-8");
-        //判断是否已在库中
-        if (recordRepository.findByCarIDAndExistAndEnter(carID, true, true).isPresent()) {
-            result.put("status", "exist");
-            return new ResponseEntity<>(result, HttpStatus.ACCEPTED);
-        }
 
-        result.put("status", "enter success");
-        recordRepository.save(new ParkRecord(carID));
-        return new ResponseEntity<>(result, HttpStatus.OK);
-    }
-
-    @PostMapping("/exit")
-    @ApiOperation("出库")
-    private ResponseEntity<Map<String, String>> exit(@RequestParam(required = false) String carID) throws UnsupportedEncodingException {
-        Map<String, String> result = new HashMap<>();
-        if (carID == null) {
-            result.put("status", "missing parameters");
-            return new ResponseEntity<>(result, HttpStatus.BAD_REQUEST);
-        }
         carID = URLDecoder.decode(carID, "UTF-8");
-        //判断是否在库中
-        if (!recordRepository.findByCarIDAndExistAndEnter(carID, true, true).isPresent()) {
-            result.put("status", "not exist");
-            return new ResponseEntity<>(result, HttpStatus.ACCEPTED);
-        }
+
         ParkRecord enterRecord = recordRepository.findByCarIDAndExistAndEnter(carID, true, true).get();
         enterRecord.setExist(false);
         ParkRecord exitRecord = new ParkRecord(carID, false, false);
-        recordRepository.save(enterRecord);
-        recordRepository.save(exitRecord);
+//        recordRepository.save(enterRecord);
+//        recordRepository.save(exitRecord);
         //获取时间差
         long diff = exitRecord.getRecordTime().getTime() - enterRecord.getRecordTime().getTime();
         double freeMinutes = Double.parseDouble(optionRepository.findByKey("free_minutes").get().getValue());
@@ -79,14 +55,9 @@ public class ParkingRecordController {
         result.put("fee", String.valueOf(fee));
         result.put("diff_time", parseMillisecond(diff));
         result.put("status", "exit success");
-        return new ResponseEntity<>(result, HttpStatus.OK);
-    }
-
-    @GetMapping("/list")
-    @ApiOperation("获取记录")
-    private ResponseEntity<List<ParkRecord>> listAll() {
-        List<ParkRecord> list = recordRepository.findAll();
-        return new ResponseEntity<>(list, HttpStatus.OK);
+        for(Map.Entry<String, String> entry : result.entrySet()){
+            System.out.println("Key = " + entry.getKey() + ", Value = " + entry.getValue());
+        }
     }
 
     private static String parseMillisecond(long millisecond) {
