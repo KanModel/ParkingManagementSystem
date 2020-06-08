@@ -3,6 +3,7 @@
 import * as echarts from '../../ec-canvas/echarts';
 
 const app = getApp()
+var interval
 
 // var empty = [], use = [];
 
@@ -141,6 +142,12 @@ Page({
     onShow: function () {
         console.log("onShow")
         this.getScatter()
+        var that = this
+        interval = setInterval(
+            function () {
+                that.getScatter()
+            }, 1000
+        )
         // this.init()
     },
     dispose: function () {
@@ -151,6 +158,10 @@ Page({
         this.setData({
             isDisposed: true
         });
+    },
+
+    onHide: function () {
+        clearInterval(interval);
     }
 
 })
