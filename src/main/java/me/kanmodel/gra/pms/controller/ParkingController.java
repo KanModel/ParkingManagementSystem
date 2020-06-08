@@ -219,6 +219,7 @@ public class ParkingController {
     @RequestMapping("/delete/scatter/all")
     public ModelAndView deleteScatterAll() {
         scatterRepository.deleteAll();
+//        scatterRepository.truncate();
         return new ModelAndView("redirect:/park/scatter/list");
     }
 

@@ -4,8 +4,11 @@ import me.kanmodel.gra.pms.entity.ParkScatter;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+
+import javax.transaction.Transactional;
 
 public interface ScatterRepository extends JpaRepository<ParkScatter, Long> {
     @Query(nativeQuery = true, value = "select * from park_scatter where device_id like %:device%")
@@ -13,4 +16,12 @@ public interface ScatterRepository extends JpaRepository<ParkScatter, Long> {
 
     @Query(nativeQuery = true, value = "select * from park_scatter")
     Page<ParkScatter> findAll(Pageable pageable);
+
+    @Transactional
+    @Modifying
+    @Query(
+            value = "truncate table park_scatter",
+            nativeQuery = true
+    )
+    void truncate();
 }

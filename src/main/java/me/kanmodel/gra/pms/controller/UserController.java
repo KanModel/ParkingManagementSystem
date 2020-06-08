@@ -60,7 +60,7 @@ public class UserController {
                        @RequestParam(value = "add_res", required = false) String add_res,
                        @RequestParam(value = "find_res", required = false) String find_res) {
         model.addAttribute("add_res", add_res).addAttribute("find_res", find_res);
-        return "user/user";
+        return "user/user_add";
     }
 
     @GetMapping("/user/{id}")
@@ -112,12 +112,12 @@ public class UserController {
             User user = new User(login, bCryptPasswordEncoder.encode(pass));
             userRepository.save(user);
             model.addAttribute("add_res", "添加用户[" + login + "]成功！");
-            System.out.println("Add user [" + login + "] : " + pass);
+            logger.info("Add user [" + login + "]");
         } else {
             model.addAttribute("add_res", "用户[" + login + "]已存在！");
-            System.out.println("User[" + login + "] is existed!");
+            logger.info("User[" + login + "] is existed!");
         }
-        return "user/user";
+        return "user/user_add";
     }
 
     /**
@@ -148,7 +148,7 @@ public class UserController {
             }
         }
         model.addAttribute("add_res", res);
-        return "user/user";
+        return "user/user_add";
     }
 
     private static String getRandomString(int length) {
