@@ -5,6 +5,8 @@ import me.kanmodel.gra.pms.dao.ScatterRecordRepository;
 import me.kanmodel.gra.pms.dao.ScatterRepository;
 import me.kanmodel.gra.pms.entity.ParkScatter;
 import me.kanmodel.gra.pms.entity.ParkScatterRecord;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +22,7 @@ import java.util.regex.Pattern;
 @Controller
 @RequestMapping("/api/scatter")
 public class ParkingScatterController {
+    private Logger logger = LoggerFactory.getLogger(getClass());
     @Autowired
     private ScatterRepository scatterRepository;
     @Autowired
@@ -42,7 +45,7 @@ public class ParkingScatterController {
             result.put("result", "Not exist");
             return new ResponseEntity<>(result, HttpStatus.BAD_REQUEST);
         }
-
+        logger.info(result.get("result"));
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
@@ -135,5 +138,12 @@ public class ParkingScatterController {
         }
 
         return list;
+    }
+    @GetMapping("/count")
+    @ResponseBody
+    @ApiOperation("可用车位统计")
+    public String parkAvailableCount() {
+        int availableCount = scatterRepository.countByUseFalse();
+        return String.valueOf(availableCount);
     }
 }

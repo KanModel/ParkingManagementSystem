@@ -13,33 +13,35 @@
         <div class="panel-heading">
             <h3 class="panel-title">系统属性设置</h3>
         </div>
-        <table class="table table-striped table-bordered">
-            <tr>
-                <td>序号</td>
-                <td>id</td>
-                <td>说明</td>
-                <td>属性名</td>
-                <td>属性值</td>
-                <td>修改</td>
-            </tr>
-            <th:block th:each="option, iter:${optionList}">
-                <tr style="font-size: 18px">
-                    <td th:text="${iter.index + 1}"></td>
-                    <td th:text="${option.id}"></td>
-                    <td th:text="${option.description}"></td>
-                    <td th:text="${option.key}"></td>
-                    <td th:text="${option.value}"></td>
-                    <td>
-                        <form th:action="@{/manage/option/edit}" method="post">
-                            <label>
-                                <input type="text" th:name="value" class="form-control">
-                            </label>
-                            <button type="submit" th:name="id" th:value="${option.id}" class="btn btn-primary">修改</button>
-                        </form>
-                    </td>
+        <div class="panel-body">
+            <table class="table">
+                <tr>
+                    <td>序号</td>
+                    <td>id</td>
+                    <td>说明</td>
+                    <td>属性名</td>
+                    <td>属性值</td>
+                    <td>修改</td>
                 </tr>
-            </th:block>
-        </table>
+                <th:block th:each="option, iter:${optionList}">
+                    <tr style="font-size: 18px">
+                        <td th:text="${iter.index + 1}"></td>
+                        <td th:text="${option.id}"></td>
+                        <td th:text="${option.description}"></td>
+                        <td th:text="${option.key}"></td>
+                        <td th:text="${option.value}"></td>
+                        <td>
+                            <form th:action="@{/manage/option/edit}" method="post">
+                                <label>
+                                    <input type="text" th:name="value" class="form-control">
+                                </label>
+                                <button type="submit" th:name="id" th:value="${option.id}" class="btn btn-primary">修改</button>
+                            </form>
+                        </td>
+                    </tr>
+                </th:block>
+            </table>
+        </div>
     </div>
 </div>
 <div th:replace="fragments/footer :: footer"></div>

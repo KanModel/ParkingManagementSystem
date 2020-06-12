@@ -17,11 +17,5 @@ public interface ScatterRepository extends JpaRepository<ParkScatter, Long> {
     @Query(nativeQuery = true, value = "select * from park_scatter")
     Page<ParkScatter> findAll(Pageable pageable);
 
-    @Transactional
-    @Modifying
-    @Query(
-            value = "truncate table park_scatter",
-            nativeQuery = true
-    )
-    void truncate();
+    int countByUseFalse();
 }

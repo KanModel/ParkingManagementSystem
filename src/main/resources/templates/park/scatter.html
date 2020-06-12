@@ -32,12 +32,28 @@
                     console.log(result);
                     for (var i = 0; i < result.length; i++) {
                         if (result[i].use) {
-                            use.push([result[i].x, result[i].y, i + 1]);
+                            // use.push([result[i].x, result[i].y, i + 1]);
+                            use.push([result[i].x, result[i].y, result[i].id]);
                         } else {
-                            empty.push([result[i].x, result[i].y, i + 1]);
+                            // empty.push([result[i].x, result[i].y, i + 1]);
+                            empty.push([result[i].x, result[i].y, result[i].id]);
                         }
                     }
                     console.log("use", use, "empty", empty, "result", result);
+                },
+                error: function (errorMsg) {
+                    alert("获取后台数据失败！");
+                }
+            });
+            $.ajax({
+                type: "GET",
+                url: "/api/scatter/count",
+                dataType: "text",
+                async: false,
+                success: function (result) {
+                    // $("#parkCount").val(result);
+                    document.getElementById("parkCount").innerHTML=result;
+                    console.log(result);
                 },
                 error: function (errorMsg) {
                     alert("获取后台数据失败！");
@@ -109,6 +125,12 @@
             myChart.setOption(option);
         }, 1000);
     </script>
+    <div>
+        <p class="text-info">
+            <span>当前可用车位数量:</span>
+            <span id="parkCount"></span>
+        </p>
+    </div>
     <a sec:authorize="hasAnyRole('ROLE_SUPER')" class="btn btn-info" th:href="@{/park/scatter/list}">分布管理</a>
 </div>
 </body>

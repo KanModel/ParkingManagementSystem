@@ -72,7 +72,8 @@ Page({
         isLoaded: false,
         isDisposed: false,
         empty: [],
-        use: []
+        use: [],
+        parkCount: 0
     },
     getScatter: function () {
         this.setData({
@@ -89,7 +90,7 @@ Page({
                 console.log(result.data, result.data.length)
                 var use = [], empty = []
                 for (var i = 0; i < result.data.length; i++) {
-                    var next = [[result.data[i].x, result.data[i].y, i + 1]]
+                    var next = [[result.data[i].x, result.data[i].y, result.data[i].id]]
                     console.log(next)
                     if (result.data[i].use) {
                         // use.push([result.data[i].x, result.data[i].y, i + 1]);
@@ -106,6 +107,20 @@ Page({
                 console.log("use", use, "empty", empty, "result", result);
                 console.log("echart init")
                 that.init()
+            }, fail(res) {
+                console.log(res)
+            }
+        })
+        wx.request({
+            url: "http://localhost:8088/api/scatter/count",
+            header: {
+                'Content-Type': 'application/json'
+            },
+            success: function (result) {
+                console.log('parkCount',result.data)
+                that.setData({
+                    parkCount: result.data
+                })
             }, fail(res) {
                 console.log(res)
             }

@@ -1,0 +1,7 @@
+<!--index.wxml-->
+<view class="container">
+  <image class="image" src="/images/res001.jpg" mode="aspectFill"></image>
+  <view class="title">智能停车场管理系统</view>
+  <view>免费停车时长:{{free_minutes}}分钟</view>
+  <view>每小时收费:{{fee_per_hours}}元</view>
+</view>

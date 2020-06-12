@@ -11,7 +11,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Enumeration;
+import java.util.List;
 
 /**
  * uri格式化过滤器
@@ -24,6 +26,9 @@ import java.util.Enumeration;
 @Component("uriFormatFilter")
 public class UriFormatFilter extends OncePerRequestFilter {
     private Logger logger = LoggerFactory.getLogger(getClass());
+    private static final List<String> SECRET_URL = Arrays.asList("/user/edit/mpass", "/user/edit/pass", "/user/add");
+    private static final List<String> DUMP_URL = Arrays.asList("/api/scatter/count", "/api/scatter"
+            ,"/webjars/bootstrap/3.3.7/css/bootstrap.min.css", "/login", "/image/res001.jpg");
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
@@ -34,8 +39,13 @@ public class UriFormatFilter extends OncePerRequestFilter {
             String name = (String) em.nextElement(); //参数名称
             para.append("&").append(name).append("=").append(request.getParameter(name)); //根据参数名称获取到参数值
         }
-        logger.info("[" + request.getRemoteAddr() + "] [" + request.getMethod()
-                + "] [" + uri + "]" + para);
+        if (SECRET_URL.indexOf(uri) != -1) {
+            logger.info("[" + request.getRemoteAddr() + "] [" + request.getMethod() + "] [" + uri + "]");//隐私数据隐藏参数
+        } else {
+            if (DUMP_URL.indexOf(uri) == -1) {
+                logger.info("[" + request.getRemoteAddr() + "] [" + request.getMethod() + "] [" + uri + "]" + para);
+            }
+        }
         String newUri = uri.replace("//", "/");
         request = new HttpServletRequestWrapper(request) {
             @Override

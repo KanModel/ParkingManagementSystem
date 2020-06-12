@@ -1,0 +1,8 @@
+/**index.wxss**/
+.image{
+  position: relative;
+}
+.title {
+  font-size: 50rpx;
+  color: blue;
+}
